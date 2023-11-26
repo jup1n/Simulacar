@@ -1,13 +1,27 @@
-import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { Text, View, TouchableOpacity, TextInput } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useState } from "react";
+import { Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { style } from "./style";
 
+type RouteaParams = {
+    usuario : string
+    idade : any
+    carro : string
+    anoCarro : any
+}
 
 export default function Budget(){
 
     const navigation = useNavigation()
-    const [name, setName] = useState('')
+    const route = useRoute()
+    const { usuario, idade, carro, anoCarro } = route.params as RouteaParams
+
+    const [porIdade, setPorIdade] = useState(0)
+    const [porAnoCarro, setPorAnoCarro] = useState(0)
+    const [total, setTotal] = useState(0)
+
 
     function handleFinish(){
         navigation.navigate('login')
@@ -17,35 +31,141 @@ export default function Budget(){
         navigation.goBack()
     }
 
-    return(
-        <SafeAreaView>
-            <Text>Simulacar</Text>
-            <View>
-                <Text>.. , fizems um orçamento para o seguro do seu veículo ... .</Text>
-                <View>
-                    <View>
-                        <Text>Base</Text>
-                        <Text>R$ 1.000,00</Text>
-                    </View>
-                    <View>
-                        <Text>Por Idade</Text>
-                        <Text>R$ 0,00</Text>
-                    </View>
-                    <View>
-                        <Text>Por Ano</Text>
-                        <Text>R$ 0,00</Text>
-                    </View>
-                </View>
-                <View>
-                    <Text>Total</Text>
-                    <Text>R$ 1.000,00</Text>
-                </View>
-            </View>
+    const handleTotalCalculation = () => {
+        var persc = 0
 
-            <TextInput>Próximo</TextInput>
-            <TouchableOpacity>
-                <View>Voltar</View>
-            </TouchableOpacity>
-        </SafeAreaView>
+        if ((anoCarro >= 2016) && (idade >= 29)) {
+            const ReduzIdade = (1000 * 0.15)
+            console.log('baseReduzIdade:', ReduzIdade)
+
+            const ReduzAnoCarro = (1000 * 0.1)
+            console.log('baseReduzAnoCarro:', ReduzIdade)
+
+            const totalCalculado = 1000 - ReduzIdade - ReduzAnoCarro
+            console.log('totalCalculado:', totalCalculado)
+
+            setTotal(totalCalculado)
+        } else if ((idade >= 29)){
+            console.log('porIdade:', porIdade)
+            console.log('porAnoCarro:', porAnoCarro)
+
+            const baseReduz = (1000 - (1000 * 0.15))
+            console.log('baseReduz:', baseReduz)
+
+            if (anoCarro < 2000) {
+                setPorAnoCarro(baseReduz * 0.3)
+            } else if ((anoCarro >= 2000) && (anoCarro <=2009)) {
+                setPorAnoCarro(baseReduz * 0.15)
+            } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
+                setPorAnoCarro(0) 
+            } else if (anoCarro >= 2016) {
+                setPorAnoCarro(baseReduz - (1000 * 0.1))
+            }
+
+            const totalCalculado = baseReduz + porAnoCarro
+            console.log('totalCalculado:', totalCalculado)
+
+            setTotal(totalCalculado)
+        } else if (anoCarro >= 2016){
+            console.log('porIdade:', porIdade)
+            console.log('porAnoCarro:', porAnoCarro)
+
+            const baseReduz = (1000 - (1000 * 0.15))
+            console.log('baseReduz:', baseReduz);
+
+            if (idade < 22) {
+                setPorIdade(baseReduz * 0.2)
+            } else if ((idade >= 22) && (idade <= 28)) {
+                setPorIdade(baseReduz * 0.18)
+            } else if (idade >= 29) {
+                setPorIdade(baseReduz - (1000 * 0.15))
+            }
+
+            const totalCalculado = baseReduz + porIdade
+            console.log('totalCalculado:', totalCalculado)
+
+            setTotal(totalCalculado)
+        } else {
+            console.log('porIdade:', porIdade)
+            console.log('porAnoCarro:', porAnoCarro)
+
+            const totalCalculado = 1000 + porAnoCarro + porIdade
+            console.log('totalCalculado:', totalCalculado)
+            setTotal(totalCalculado)
+        }
+
+        
+    }
+
+    useEffect(() => {
+        handlePorIdadeCalculation()
+        handelPorAnoCarroCalculation()
+        handleTotalCalculation()
+      }, [idade, anoCarro])
+
+    const handlePorIdadeCalculation = () => {
+        if (idade < 22) {
+            setPorIdade(1000 * 0.2)
+        } else if ((idade >= 22) && (idade <= 28)) {
+            setPorIdade(1000 * 0.18)
+        } else if (idade >= 29) {
+            setPorIdade(1000 * 0.15)
+        }
+    }
+
+    const handelPorAnoCarroCalculation = () => {
+        if (anoCarro < 2000) {
+            setPorAnoCarro(1000 * 0.3)
+        } else if ((anoCarro >= 2000) && (anoCarro <=2009)) {
+            setPorAnoCarro(1000 * 0.15)
+        } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
+            setPorAnoCarro(0) 
+        } else if (anoCarro >= 2016) {
+            setPorAnoCarro(1000 * 0.1)
+        }
+    }
+
+    return(
+        <LinearGradient
+            style={{flex:1,justifyContent:"center"}}
+            colors={['#5374B6','#B65353']}>
+            <SafeAreaView style={style.main}>
+                <Text style={style.title}>SIMULACAR</Text>
+                <View style={style.boxAll}>
+                    <View style={style.boxSubTitle}>
+                        <Text style={style.textSubTitle}>{usuario}, fizems um orçamento para o seguro do seu veículo {carro}.</Text>
+                    </View>
+                    <View style={style.boxAll}>
+                        <View style={style.boxResults}>
+                            <Text style={style.textResults}>Base</Text>
+                            <Text style={style.textResults}>R$ 1.000</Text>
+                        </View>
+                        <View style={style.boxResults}>
+                            <Text style={style.textResults}>Por Idade</Text>
+                            <Text style={style.textResults}>R$ {porIdade}</Text>
+                        </View>
+                        <View style={style.boxResults}>
+                            <Text style={style.textResults}>Por Ano</Text>
+                            <Text style={style.textResults}>R$ {porAnoCarro}</Text>
+                        </View>
+                    </View>
+                    <View style={style.boxResults}>
+                        <Text style={style.textResults}>Total</Text>
+                        <Text style={style.textResults}>R$ {total}</Text>
+                    </View>
+                </View>
+                <View style={style.boxBotao}>
+                    <TouchableOpacity   onPress={handleFinish}
+                                        style={style.botao}>
+                        <Text style={style.textNext}>Finalizar</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={style.boxBack}>
+                    <TouchableOpacity onPress={handleBack}>
+                        <Text style={style.textBack}>Voltar</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        </LinearGradient>
     )
 }
