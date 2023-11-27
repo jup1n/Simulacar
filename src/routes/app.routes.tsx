@@ -2,6 +2,7 @@ import {createNativeStackNavigator, } from '@react-navigation/native-stack'
 import InputAge from '@screens/Age'
 import Budget from '@screens/Budget'
 import CarInfo from '@screens/CarInfo'
+import CarValue from '@screens/CarValue'
 import Login from '@screens/Login'
 
 
@@ -13,6 +14,7 @@ export function AppRoutes(){
             <Screen name="login" component={Login}/>
             {<Screen name="inputAge" component={InputAge}/>}
             {<Screen name="carInfo" component={CarInfo}/>}
+            {<Screen name="carValue" component={CarValue}/>}
             {<Screen name="budget" component={Budget}/>}
 
         </Navigator>
