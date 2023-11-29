@@ -36,7 +36,8 @@ export const style = StyleSheet.create({
     boxBotao : {
         height: 50,
         width:'80%',
-        justifyContent:"center"
+        justifyContent:"center",
+        paddingTop: 0
     },
 
     textNext : {
@@ -76,11 +77,15 @@ export const style = StyleSheet.create({
         color:'#1A254E',
         fontSize: 15,
         paddingLeft:10,
-        fontWeight:"bold",
+        fontWeight:"bold"
     },
 
     boxTotal : {
         paddingTop: 25,
         flexDirection: "row"
+    },
+
+    boxCheked : {
+        paddingBottom:30
     }
 })

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { style } from "./style";
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import ResultComponent from "@components/results";
 
 type RouteaParams = {
     usuario : string
@@ -21,6 +23,11 @@ export default function Budget(){
     const [porIdade, setPorIdade] = useState(0)
     const [porAnoCarro, setPorAnoCarro] = useState(0)
     const [total, setTotal] = useState(0)
+<<<<<<< Updated upstream
+=======
+    const [base, setBase] = useState(0)
+    const [checked, setChecked] = useState(false)
+>>>>>>> Stashed changes
 
 
     function handleFinish(){
@@ -30,6 +37,8 @@ export default function Budget(){
     function handleBack(){
         navigation.goBack()
     }
+
+    const handleCheck = () => setChecked(prev => !prev)
 
     const handleTotalCalculation = () => {
         var persc = 0
@@ -101,7 +110,7 @@ export default function Budget(){
         handlePorIdadeCalculation()
         handelPorAnoCarroCalculation()
         handleTotalCalculation()
-      }, [idade, anoCarro])
+      }, [idade, anoCarro, preco])
 
     const handlePorIdadeCalculation = () => {
         if (idade < 22) {
@@ -136,6 +145,7 @@ export default function Budget(){
                         <Text style={style.textSubTitle}>{usuario}, fizems um orçamento para o seguro do seu veículo {carro}.</Text>
                     </View>
                     <View style={style.boxAll}>
+<<<<<<< Updated upstream
                         <View style={style.boxResults}>
                             <Text style={style.textResults}>Base</Text>
                             <Text style={style.textResults}>R$ 1.000</Text>
@@ -152,7 +162,24 @@ export default function Budget(){
                     <View style={style.boxResults}>
                         <Text style={style.textResults}>Total</Text>
                         <Text style={style.textResults}>R$ {total}</Text>
+=======
+                        <ResultComponent titulo={"Base"} valor={base} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+                        <ResultComponent titulo={"Por Idade"} valor={porIdade} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+                        <ResultComponent titulo={"Por Ano"} valor={porAnoCarro} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+>>>>>>> Stashed changes
                     </View>
+                    <ResultComponent titulo={"Total"} valor={total} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+                </View>
+                <View style={style.boxCheked}>
+                    <BouncyCheckbox size={25}
+                                    fillColor="#1f5524"
+                                    unfillColor="#9d5959"
+                                    text="Conversão para dólar"
+                                    textStyle={style.textResults}
+                                    iconStyle={{ borderColor: "#1f5524" }}
+                                    innerIconStyle={{ borderWidth: 2 }}
+                                    onPress={handleCheck}
+                                    isChecked={checked}/>
                 </View>
                 <View style={style.boxBotao}>
                     <TouchableOpacity   onPress={handleFinish}
@@ -169,3 +196,19 @@ export default function Budget(){
         </LinearGradient>
     )
 }
+{/* <View style={style.boxResults}>
+        <Text style={style.textResults}>Base</Text>
+        <Text style={style.textResults}>R$ {base}</Text>
+    </View>
+    <View style={style.boxResults}>
+        <Text style={style.textResults}>Por Idade</Text>
+        <Text style={style.textResults}>R$ {porIdade}</Text>
+    </View>
+    <View style={style.boxResults}>
+        <Text style={style.textResults}>Por Ano</Text>
+        <Text style={style.textResults}>R$ {porAnoCarro}</Text>
+    </View> 
+    <View style={style.boxResults}>
+        <Text style={style.textResults}>Total</Text>
+        <Text style={style.textResults}>R$ {total}</Text>
+    </View> */}
