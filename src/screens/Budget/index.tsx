@@ -12,22 +12,20 @@ type RouteaParams = {
     idade : any
     carro : string
     anoCarro : any
+    preco : any
 }
 
 export default function Budget(){
 
     const navigation = useNavigation()
     const route = useRoute()
-    const { usuario, idade, carro, anoCarro } = route.params as RouteaParams
+    const { usuario, idade, carro, anoCarro, preco } = route.params as RouteaParams
 
     const [porIdade, setPorIdade] = useState(0)
     const [porAnoCarro, setPorAnoCarro] = useState(0)
     const [total, setTotal] = useState(0)
-<<<<<<< Updated upstream
-=======
     const [base, setBase] = useState(0)
     const [checked, setChecked] = useState(false)
->>>>>>> Stashed changes
 
 
     function handleFinish(){
@@ -42,15 +40,16 @@ export default function Budget(){
 
     const handleTotalCalculation = () => {
         var persc = 0
+        console.log('base dentro do handle total:',base)
 
         if ((anoCarro >= 2016) && (idade >= 29)) {
-            const ReduzIdade = (1000 * 0.15)
+            const ReduzIdade = (base * 0.15)
             console.log('baseReduzIdade:', ReduzIdade)
 
-            const ReduzAnoCarro = (1000 * 0.1)
+            const ReduzAnoCarro = (base * 0.1)
             console.log('baseReduzAnoCarro:', ReduzIdade)
 
-            const totalCalculado = 1000 - ReduzIdade - ReduzAnoCarro
+            const totalCalculado = base - ReduzIdade - ReduzAnoCarro
             console.log('totalCalculado:', totalCalculado)
 
             setTotal(totalCalculado)
@@ -58,7 +57,7 @@ export default function Budget(){
             console.log('porIdade:', porIdade)
             console.log('porAnoCarro:', porAnoCarro)
 
-            const baseReduz = (1000 - (1000 * 0.15))
+            const baseReduz = (base - (base * 0.15))
             console.log('baseReduz:', baseReduz)
 
             if (anoCarro < 2000) {
@@ -68,7 +67,7 @@ export default function Budget(){
             } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
                 setPorAnoCarro(0) 
             } else if (anoCarro >= 2016) {
-                setPorAnoCarro(baseReduz - (1000 * 0.1))
+                setPorAnoCarro(baseReduz - (base * 0.1))
             }
 
             const totalCalculado = baseReduz + porAnoCarro
@@ -79,7 +78,7 @@ export default function Budget(){
             console.log('porIdade:', porIdade)
             console.log('porAnoCarro:', porAnoCarro)
 
-            const baseReduz = (1000 - (1000 * 0.15))
+            const baseReduz = (base - (base * 0.15))
             console.log('baseReduz:', baseReduz);
 
             if (idade < 22) {
@@ -87,7 +86,7 @@ export default function Budget(){
             } else if ((idade >= 22) && (idade <= 28)) {
                 setPorIdade(baseReduz * 0.18)
             } else if (idade >= 29) {
-                setPorIdade(baseReduz - (1000 * 0.15))
+                setPorIdade(baseReduz - (base * 0.15))
             }
 
             const totalCalculado = baseReduz + porIdade
@@ -98,39 +97,61 @@ export default function Budget(){
             console.log('porIdade:', porIdade)
             console.log('porAnoCarro:', porAnoCarro)
 
-            const totalCalculado = 1000 + porAnoCarro + porIdade
+            const totalCalculado = base + porAnoCarro + porIdade
             console.log('totalCalculado:', totalCalculado)
             setTotal(totalCalculado)
         }
-
-        
     }
 
     useEffect(() => {
+        handleBaseCalculation()
         handlePorIdadeCalculation()
         handelPorAnoCarroCalculation()
         handleTotalCalculation()
       }, [idade, anoCarro, preco])
 
+    
+    const handleBaseCalculation = () => {
+        console.log('base:', base)
+        console.log('idade:', porIdade)
+        console.log('anoCarro:', porAnoCarro)
+
+        if (preco > 100000) {
+            setBase(2000)
+            console.log('base:', base)
+        } else if ((preco <= 100000) && (preco >= 50000)) {
+            setBase(1500)
+            console.log('base:', base)
+        } else if (preco < 50000) {
+            setBase(1000)
+            console.log('base:', base)
+        }
+    }
+
     const handlePorIdadeCalculation = () => {
+        console.log('base dentro do handle idade:',base)
+
+
         if (idade < 22) {
-            setPorIdade(1000 * 0.2)
+            setPorIdade(base * 0.2)
         } else if ((idade >= 22) && (idade <= 28)) {
-            setPorIdade(1000 * 0.18)
+            setPorIdade(base * 0.18)
         } else if (idade >= 29) {
-            setPorIdade(1000 * 0.15)
+            setPorIdade(base * 0.15)
         }
     }
 
     const handelPorAnoCarroCalculation = () => {
+        console.log('base dentro do handle ano:',base)
+
         if (anoCarro < 2000) {
-            setPorAnoCarro(1000 * 0.3)
+            setPorAnoCarro(base * 0.3)
         } else if ((anoCarro >= 2000) && (anoCarro <=2009)) {
-            setPorAnoCarro(1000 * 0.15)
+            setPorAnoCarro(base * 0.15)
         } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
             setPorAnoCarro(0) 
         } else if (anoCarro >= 2016) {
-            setPorAnoCarro(1000 * 0.1)
+            setPorAnoCarro(base * 0.1)
         }
     }
 
@@ -145,28 +166,9 @@ export default function Budget(){
                         <Text style={style.textSubTitle}>{usuario}, fizems um orçamento para o seguro do seu veículo {carro}.</Text>
                     </View>
                     <View style={style.boxAll}>
-<<<<<<< Updated upstream
-                        <View style={style.boxResults}>
-                            <Text style={style.textResults}>Base</Text>
-                            <Text style={style.textResults}>R$ 1.000</Text>
-                        </View>
-                        <View style={style.boxResults}>
-                            <Text style={style.textResults}>Por Idade</Text>
-                            <Text style={style.textResults}>R$ {porIdade}</Text>
-                        </View>
-                        <View style={style.boxResults}>
-                            <Text style={style.textResults}>Por Ano</Text>
-                            <Text style={style.textResults}>R$ {porAnoCarro}</Text>
-                        </View>
-                    </View>
-                    <View style={style.boxResults}>
-                        <Text style={style.textResults}>Total</Text>
-                        <Text style={style.textResults}>R$ {total}</Text>
-=======
                         <ResultComponent titulo={"Base"} valor={base} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
                         <ResultComponent titulo={"Por Idade"} valor={porIdade} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
                         <ResultComponent titulo={"Por Ano"} valor={porAnoCarro} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
->>>>>>> Stashed changes
                     </View>
                     <ResultComponent titulo={"Total"} valor={total} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
                 </View>

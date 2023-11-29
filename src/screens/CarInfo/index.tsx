@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { style } from "./style";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaskedInput } from "@components/inputs";
 
 type RouteParams = {
     usuario : string,
@@ -19,6 +20,7 @@ export default function CarInfo(){
 
     const [carro, setCarro] = useState('')
     const [anoCarro, setAnoCarro] = useState(0)
+    const [placa, setPlaca] = useState('')
 
     function handleNext(){
         navigation.navigate('budget', { usuario, idade, carro, anoCarro })
@@ -35,6 +37,10 @@ export default function CarInfo(){
     const [porIdade, setPorIdade] = useState(0)
     const [porAnoCarro, setPorAnoCarro] = useState(0)
     const [total, setTotal] = useState(0)
+
+    const handlePlaca = (valor: string) => {
+        setPlaca(valor)
+    }
 
     const handlePorIdadeCalculation = () => {
         var persc = 0
@@ -89,6 +95,19 @@ export default function CarInfo(){
                                     style={style.inputs}
                                     keyboardType="numeric" 
                                     returnKeyType="done"/>
+                    </View>
+                    <View>
+                        <Text style={style.textInputs}>Informe a placa do seu carro</Text>
+                        <MaskedInput valor={placa}
+                                     style={style.inputs} 
+                                     optionsInput={{
+                                        mask: 'AAA-9999',
+                                        translation: {
+                                            A: valor => valor.toUpperCase()
+                                        }
+                                     }} 
+                                     typeInput="custom"
+                                     onChange={handlePlaca}/>
                     </View>
                 </View>
                 <View style={style.boxBotao}>
