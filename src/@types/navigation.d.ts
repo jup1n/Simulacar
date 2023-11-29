@@ -9,11 +9,18 @@ export declare global{
                 usuario : string
                 idade : any
             }
+            carValue : {
+                usuario : string
+                idade : any
+                carro : string
+                anoCarro: any
+            }
             budget : {
                 usuario : string
                 idade : any
                 carro : string
                 anoCarro: any
+                preco : any
             }
 
         }

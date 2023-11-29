@@ -21,7 +21,7 @@ export default function CarInfo(){
     const [anoCarro, setAnoCarro] = useState(0)
 
     function handleNext(){
-        navigation.navigate('budget', { usuario, idade, carro, anoCarro })
+        navigation.navigate('carValue', { usuario, idade, carro, anoCarro })
     }
 
     function handleBack(){
