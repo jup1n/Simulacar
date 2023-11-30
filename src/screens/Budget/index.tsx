@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { style } from "./style";
+import ResultComponent from "@components/results";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 type RouteaParams = {
     usuario : string
@@ -23,7 +25,9 @@ export default function Budget(){
     const [porAnoCarro, setPorAnoCarro] = useState(0)
     const [total, setTotal] = useState(0)
     const [base, setBase] = useState(0)
+    const [checked, setChecked] = useState(false)
 
+    const handleCheck = () => setChecked(prev => !prev)
 
     function handleFinish(){
         navigation.navigate('login')
@@ -34,120 +38,63 @@ export default function Budget(){
     }
 
     const handleTotalCalculation = () => {
-        var persc = 0
-        console.log('base dentro do handle total:',base)
-
-        if ((anoCarro >= 2016) && (idade >= 29)) {
-            const ReduzIdade = (base * 0.15)
-            console.log('baseReduzIdade:', ReduzIdade)
-
-            const ReduzAnoCarro = (base * 0.1)
-            console.log('baseReduzAnoCarro:', ReduzIdade)
-
-            const totalCalculado = base - ReduzIdade - ReduzAnoCarro
-            console.log('totalCalculado:', totalCalculado)
-
-            setTotal(totalCalculado)
-        } else if ((idade >= 29)){
-            console.log('porIdade:', porIdade)
-            console.log('porAnoCarro:', porAnoCarro)
-
-            const baseReduz = (base - (base * 0.15))
-            console.log('baseReduz:', baseReduz)
-
-            if (anoCarro < 2000) {
-                setPorAnoCarro(baseReduz * 0.3)
-            } else if ((anoCarro >= 2000) && (anoCarro <=2009)) {
-                setPorAnoCarro(baseReduz * 0.15)
-            } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
-                setPorAnoCarro(0) 
-            } else if (anoCarro >= 2016) {
-                setPorAnoCarro(baseReduz - (base * 0.1))
-            }
-
-            const totalCalculado = baseReduz + porAnoCarro
-            console.log('totalCalculado:', totalCalculado)
-
-            setTotal(totalCalculado)
-        } else if (anoCarro >= 2016){
-            console.log('porIdade:', porIdade)
-            console.log('porAnoCarro:', porAnoCarro)
-
-            const baseReduz = (base - (base * 0.15))
-            console.log('baseReduz:', baseReduz);
-
-            if (idade < 22) {
-                setPorIdade(baseReduz * 0.2)
-            } else if ((idade >= 22) && (idade <= 28)) {
-                setPorIdade(baseReduz * 0.18)
-            } else if (idade >= 29) {
-                setPorIdade(baseReduz - (base * 0.15))
-            }
-
-            const totalCalculado = baseReduz + porIdade
-            console.log('totalCalculado:', totalCalculado)
-
-            setTotal(totalCalculado)
-        } else {
-            console.log('porIdade:', porIdade)
-            console.log('porAnoCarro:', porAnoCarro)
-
             const totalCalculado = base + porAnoCarro + porIdade
-            console.log('totalCalculado:', totalCalculado)
             setTotal(totalCalculado)
-        }
     }
 
     useEffect(() => {
         handleBaseCalculation()
-        handlePorIdadeCalculation()
-        handelPorAnoCarroCalculation()
-        handleTotalCalculation()
-      }, [idade, anoCarro])
+      }, [])
 
+    useEffect(() => {
+        handlePorIdadeCalculation(base)
+    }, [])
+
+    useEffect(() => {
+        handelPorAnoCarroCalculation(base)
+     }, [])
     
     const handleBaseCalculation = () => {
-        console.log('base:', base)
-        console.log('idade:', porIdade)
-        console.log('anoCarro:', porAnoCarro)
+        let baseAux = 0
 
         if (preco > 100000) {
-            setBase(2000)
-            console.log('base:', base)
+            baseAux = 2000
         } else if ((preco <= 100000) && (preco >= 50000)) {
-            setBase(1500)
-            console.log('base:', base)
+            baseAux = 1500
         } else if (preco < 50000) {
-            setBase(1000)
-            console.log('base:', base)
+            baseAux = 1000
         }
+
+        setBase(baseAux)
     }
 
-    const handlePorIdadeCalculation = () => {
-        console.log('base dentro do handle idade:',base)
+    const handlePorIdadeCalculation = (baseAux) => {
+        console.log('base dentro do handle idade:',baseAux)
 
 
         if (idade < 22) {
-            setPorIdade(base * 0.2)
+            setPorIdade(baseAux * 0.2)
         } else if ((idade >= 22) && (idade <= 28)) {
-            setPorIdade(base * 0.18)
+            setPorIdade(baseAux * 0.18)
         } else if (idade >= 29) {
-            setPorIdade(base * 0.15)
+            setPorIdade(baseAux * 0.15)
         }
     }
 
-    const handelPorAnoCarroCalculation = () => {
-        console.log('base dentro do handle ano:',base)
+    const handelPorAnoCarroCalculation = (baseAux) => {
+        console.log('base dentro do handle ano:',baseAux)
 
         if (anoCarro < 2000) {
-            setPorAnoCarro(base * 0.3)
+            setPorAnoCarro(baseAux * 0.3)
         } else if ((anoCarro >= 2000) && (anoCarro <=2009)) {
-            setPorAnoCarro(base * 0.15)
+            setPorAnoCarro(baseAux * 0.15)
         } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
             setPorAnoCarro(0) 
         } else if (anoCarro >= 2016) {
-            setPorAnoCarro(base * 0.1)
+            setPorAnoCarro(baseAux * 0.1)
         }
+
+        handleTotalCalculation()
     }
 
     return(
@@ -161,23 +108,22 @@ export default function Budget(){
                         <Text style={style.textSubTitle}>{usuario}, fizems um orçamento para o seguro do seu veículo {carro}.</Text>
                     </View>
                     <View style={style.boxAll}>
-                        <View style={style.boxResults}>
-                            <Text style={style.textResults}>Base</Text>
-                            <Text style={style.textResults}>R$ {base}</Text>
-                        </View>
-                        <View style={style.boxResults}>
-                            <Text style={style.textResults}>Por Idade</Text>
-                            <Text style={style.textResults}>R$ {porIdade}</Text>
-                        </View>
-                        <View style={style.boxResults}>
-                            <Text style={style.textResults}>Por Ano</Text>
-                            <Text style={style.textResults}>R$ {porAnoCarro}</Text>
-                        </View>
+                        <ResultComponent titulo={"Base"} valor={base} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+                        <ResultComponent titulo={"Por Idade"} valor={porIdade} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+                        <ResultComponent titulo={"Por Ano"} valor={porAnoCarro} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
                     </View>
-                    <View style={style.boxResults}>
-                        <Text style={style.textResults}>Total</Text>
-                        <Text style={style.textResults}>R$ {total}</Text>
-                    </View>
+                    <ResultComponent titulo={"Total"} valor={total} checked={checked} styleBox={style.boxResults} styleValor={style.textResults}/>
+                </View>
+                <View style={style.boxCheked}>
+                    <BouncyCheckbox size={25}
+                                    fillColor="#1f5524"
+                                    unfillColor="#9d5959"
+                                    text="Conversão para dólar"
+                                    textStyle={style.textResults}
+                                    iconStyle={{ borderColor: "#1f5524" }}
+                                    innerIconStyle={{ borderWidth: 2 }}
+                                    onPress={handleCheck}
+                                    isChecked={checked}/>
                 </View>
                 <View style={style.boxBotao}>
                     <TouchableOpacity   onPress={handleFinish}

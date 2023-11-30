@@ -1,9 +1,10 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { style } from "./style";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaskedInput } from "@components/inputs";
 
 type RouteParams = {
     usuario : string,
@@ -19,9 +20,19 @@ export default function CarInfo(){
 
     const [carro, setCarro] = useState('')
     const [anoCarro, setAnoCarro] = useState(0)
+    const [placa, setPlaca] = useState('')
+
 
     function handleNext(){
-        navigation.navigate('carValue', { usuario, idade, carro, anoCarro })
+        try {
+            if (anoCarro === 0 || placa === '') {
+                Alert.alert('Erro', 'Credenciais inválidas. Tente novamente.')
+            } else {
+                navigation.navigate('carValue', { usuario, idade, carro, anoCarro })
+            }
+          } catch (error) {
+            console.error('Erro durante a autenticação:', error)
+          }
     }
 
     function handleBack(){
@@ -32,40 +43,8 @@ export default function CarInfo(){
         setAnoCarro(parseInt(text,10))
     }
 
-    const [porIdade, setPorIdade] = useState(0)
-    const [porAnoCarro, setPorAnoCarro] = useState(0)
-    const [total, setTotal] = useState(0)
-
-    const handlePorIdadeCalculation = () => {
-        var persc = 0
-        var perscAno = 0
-
-        if (idade < 22) {
-            persc = 20
-            setPorIdade(1000 * (persc/100))
-        } else if ((idade >= 22) && (idade <= 28)) {
-            persc = 18
-            setPorIdade(1000 * (persc/100))
-        } else if (idade >= 29) {
-            persc = 10
-            setPorIdade(1000 * (persc/100))
-        }
-
-        if (anoCarro < 2000) {
-            perscAno = 30
-            setPorAnoCarro(1000 * (perscAno/100))
-        } else if ((anoCarro >= 2000) && (anoCarro <=2009)) {
-            perscAno = 15
-            setPorAnoCarro(1000 * (perscAno/100))
-        } else if ((anoCarro >= 2010) && (anoCarro <= 2015)) {
-            setPorAnoCarro(0) 
-        } else if (anoCarro >= 2016) {
-            perscAno = 10
-            setPorAnoCarro(1000 * (perscAno/100))
-        }
-
-        setTotal(1000 + porAnoCarro + porIdade)
-
+    const handlePlaca = (valor: string) => {
+        setPlaca(valor)
     }
 
     return(
@@ -89,6 +68,19 @@ export default function CarInfo(){
                                     style={style.inputs}
                                     keyboardType="numeric" 
                                     returnKeyType="done"/>
+                    </View>
+                    <View>
+                        <Text style={style.textInputs}>Informe a placa do seu carro</Text>
+                        <MaskedInput valor={placa}
+                                     style={style.inputs} 
+                                     optionsInput={{
+                                        mask: 'AAA-9999',
+                                        translation: {
+                                            A: (valor: string) => valor.toUpperCase()
+                                        }
+                                     }} 
+                                     typeInput="custom"
+                                     onChange={handlePlaca}/>
                     </View>
                 </View>
                 <View style={style.boxBotao}>

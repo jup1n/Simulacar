@@ -1,4 +1,4 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { style } from "./style";
@@ -22,8 +22,17 @@ export default function CarValue(){
 
 
     function handleNext(){
-        navigation.navigate('budget', { usuario, idade, carro, anoCarro, preco })
+        try {
+            if (anoCarro === 0 || preco === 0) {
+                Alert.alert('Erro', 'Credenciais inválidas. Tente novamente.')
+            } else {
+                navigation.navigate('budget', { usuario, idade, carro, anoCarro, preco })
+            }
+          } catch (error) {
+            console.error('Erro durante a autenticação:', error)
+          }
     }
+    
 
     function handleBack(){
         navigation.goBack()

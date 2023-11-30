@@ -1,4 +1,4 @@
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,11 +10,20 @@ export default function Login(){
 
     const navigation = useNavigation()
     const [usuario, setUsuario] = useState('')
-
+    const [senha, setSenha] = useState('')
 
     function handleNext(){
-        navigation.navigate('inputAge', { usuario })
+        try {
+            if (usuario === '' || senha === '') {
+                Alert.alert('Erro', 'Credenciais inválidas. Tente novamente.')
+            } else {
+                navigation.navigate('inputAge', { usuario })
+            }
+          } catch (error) {
+            console.error('Erro durante a autenticação:', error)
+          }
     }
+    
 
     return(
         <LinearGradient
@@ -29,19 +38,17 @@ export default function Login(){
                         <Text style={style.textInputs}>
                             Usuario
                         </Text>
-                        <TextInput  style={style.inputs} 
-                                    onChangeText={setUsuario}/>
+                        <TextInput  style={style.inputs} onChangeText={setUsuario}/>
                     </View>
                     <View style={style.boxInputs}>
                         <Text style={style.textInputs}>
                             Senha
                         </Text>
-                        <TextInput style={style.inputs}/>
+                        <TextInput style={style.inputs} onChangeText={setSenha} secureTextEntry={true}/>
                     </View>
                 </View>
                 <View style={style.boxBotao}>
-                    <TouchableOpacity   style={style.botao} 
-                                        onPress={handleNext}>
+                    <TouchableOpacity   style={style.botao} onPress={handleNext}>
                         <Text style={style.loginText}>
                             Logar
                         </Text>

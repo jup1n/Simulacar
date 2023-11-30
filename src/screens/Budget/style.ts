@@ -82,5 +82,9 @@ export const style = StyleSheet.create({
     boxTotal : {
         paddingTop: 25,
         flexDirection: "row"
+    },
+
+    boxCheked : {
+        paddingBottom: 35
     }
 })
