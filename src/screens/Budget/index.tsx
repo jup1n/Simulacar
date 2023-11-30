@@ -44,7 +44,7 @@ export default function Budget(){
 
     useEffect(() => {
         handleBaseCalculation()
-      }, [])
+      }, [base])
 
     useEffect(() => {
         handlePorIdadeCalculation(base)
@@ -52,6 +52,10 @@ export default function Budget(){
 
     useEffect(() => {
         handelPorAnoCarroCalculation(base)
+     }, [])
+
+     useEffect(() => {
+        handleTotalCalculation()
      }, [])
     
     const handleBaseCalculation = () => {
@@ -93,8 +97,6 @@ export default function Budget(){
         } else if (anoCarro >= 2016) {
             setPorAnoCarro(baseAux * 0.1)
         }
-
-        handleTotalCalculation()
     }
 
     return(

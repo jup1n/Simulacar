@@ -18,7 +18,7 @@ export const style = StyleSheet.create({
         height: 45,
         width: '100%',
         backgroundColor: '#F6F6F6',
-        borderColor: '#00000',
+        borderColor: '#000000',
         borderWidth:1.3,
         borderRadius:15
     },
